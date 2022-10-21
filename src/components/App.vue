@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <nav-bar />
-    <main>
-      <user-list />
-    </main>
+    <main><user-list /></main>
   </div>
 </template>
 
