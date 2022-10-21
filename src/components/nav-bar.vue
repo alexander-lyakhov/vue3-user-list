@@ -2,7 +2,7 @@
   <nav>
     <div class="nav-header">
       <div class="text-input">
-        <input type="text" ref="userName" @keyup.enter="addUser" />
+        <input ref="refName" type="text" v-model.trim="name" @keyup.enter="addUser"/>
         <button class="btn-add" @click.prevent="addUser">Add</button>
       </div>
       <div class="account">
@@ -14,25 +14,43 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, useStore } from "vuex";
+import { ref, toRefs, reactive, onMounted, computed } from "vue"
 
 export default {
   name: "NavBar",
 
-  computed: {
-    ...mapState("account", ["accountName", "accountAvatar"]),
-  },
+  setup() {
+    const state = reactive({
+      name: "",
+    })
 
-  methods: {
-    addUser() {
-      const el = this.$refs.userName;
+    const store = useStore()
+    const refName = ref(null)
 
-      if (el.value.trim() !== "") {
-        this.$store.commit("users/ADD_USER", el.value);
+    const addUser = () => {
+      store.commit("users/ADD_USER", state.name);
+      state.name = ""
+    }
 
-        el.value = "";
-        el.focus();
-      }
+    onMounted(() =>
+      refName.value.focus()
+    )
+
+    const accountAvatar = computed(
+      state => store.state.account.accountAvatar
+    )
+
+    return {
+      // refs
+      refName,
+
+      // data
+      accountAvatar,
+      ...toRefs(state),
+
+      //methods
+      addUser,
     }
   }
 };
