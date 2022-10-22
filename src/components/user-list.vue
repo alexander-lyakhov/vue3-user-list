@@ -3,20 +3,17 @@
     <section>
       <a class="load-users" href="#" @click.prevent="loadUsers">Load users</a>
       <span>&nbsp;|&nbsp;</span>
-      <a class="clear-users" href="#" @click.prevent="clearUsers"
-        >Clear users</a
-      >
-
+      <a class="clear-users" href="#" @click.prevent="clearUsers">Clear users</a>
       <h2>Count: {{ userCount }}</h2>
     </section>
 
     <ul class="user-list">
       <li class="user-list--item" v-for="user in users" :key="user.id">
-        <div class="avatar"><img :src="userAvatar" width="48" /></div>
+        <div class="avatar">
+          <img :src="userAvatar" width="48" />
+        </div>
         <span class="username">{{ user.name }}</span>
-        <a href="#" class="btn-remove" @click.prevent="removeUser(user.id);"
-          >+</a
-        >
+        <a href="#" class="btn-remove" @click.prevent="removeUser(user.id);">+</a>
       </li>
     </ul>
   </div>
@@ -41,6 +38,20 @@ export default {
     const users = computed(() => store.state.users.users)
     const userCount = computed(() => store.getters['users/userCount'])
 
+    const loadUsers = () => {
+      store
+        .dispatch("users/LOAD_USERS")
+        .catch(err => console.log("--- ERROR --->", err.message))
+    }
+
+    const clearUsers = () => {
+      store.commit("users/CLEAR_USERS")
+    }
+
+    const removeUser = (id) => {
+      store.commit("users/REMOVE_USER", id)
+    }
+
     return {
       // data
       users,
@@ -48,17 +59,9 @@ export default {
       ...toRefs(data),
 
       // methods
-        loadUsers: () => {
-          store
-            .dispatch("users/LOAD_USERS")
-            .catch(err => console.log("--- ERROR --->", err.message))
-        },
-        clearUsers: () => {
-          store.commit("users/CLEAR_USERS")
-        },
-        removeUser: (id) => {
-          store.commit("users/REMOVE_USER", id)
-        }
+      loadUsers,
+      clearUsers,
+      removeUser,
     }
   }
 };
