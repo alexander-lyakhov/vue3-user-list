@@ -28,24 +28,32 @@ export default {
     const store = useStore()
     const refName = ref(null)
 
-    const addUser = () => {
-      store.commit("users/ADD_USER", state.name);
-      state.name = ""
-    }
-
+    // hooks
     onMounted(() =>
       refName.value.focus()
+    )
+
+    // computed
+    const accountName = computed(
+      state => store.state.account.accountName
     )
 
     const accountAvatar = computed(
       state => store.state.account.accountAvatar
     )
 
+    // methods
+    const addUser = () => {
+      store.commit("users/ADD_USER", state.name);
+      state.name = ""
+    }
+
     return {
       // refs
       refName,
 
       // data
+      accountName,
       accountAvatar,
       ...toRefs(state),
 

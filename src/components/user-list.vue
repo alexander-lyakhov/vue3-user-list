@@ -24,36 +24,47 @@
 
 <script>
 import userAvatar from "../assets/user-avatar.png";
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, useStore } from "vuex";
+import { reactive, computed, toRefs } from "vue"
 
 export default {
   name: "UserList",
 
-  data: () => ({ userAvatar }),
+  setup() {
+    const data = reactive({
+      userAvatar
+    })
 
-  computed: {
-    ...mapState("users", ["users"]),
-    ...mapGetters("users", ["userCount"])
-  },
+    const store = useStore()
 
-  methods: {
-    loadUsers() {
-      this.$store
-        .dispatch("users/LOAD_USERS")
-        .catch(err => console.log("--- ERROR --->", err.message));
-    },
-    clearUsers() {
-      this.$store.commit("users/CLEAR_USERS");
-    },
-    removeUser(id) {
-      this.$store.commit("users/REMOVE_USER", id);
+    // computed
+    const users = computed(() => store.state.users.users)
+    const userCount = computed(() => store.getters['users/userCount'])
+
+    return {
+      // data
+      users,
+      userCount,
+      ...toRefs(data),
+
+      // methods
+        loadUsers: () => {
+          store
+            .dispatch("users/LOAD_USERS")
+            .catch(err => console.log("--- ERROR --->", err.message))
+        },
+        clearUsers: () => {
+          store.commit("users/CLEAR_USERS")
+        },
+        removeUser: (id) => {
+          store.commit("users/REMOVE_USER", id)
+        }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/variables.scss";
 
 section {
   display: flex;
