@@ -2,7 +2,7 @@
   css: {
     loaderOptions: {
       sass: {
-        prependData: '@import "@/styles/variables.scss";',
+        prependData: '@import "@/styles/index.scss";',
       }
     }
   },
