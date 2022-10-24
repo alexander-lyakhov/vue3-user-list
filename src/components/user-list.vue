@@ -20,18 +20,15 @@
 </template>
 
 <script>
-import userAvatar from "../assets/user-avatar.png";
+import userAvatarImg from "../assets/user-avatar.png";
 import { mapState, mapGetters, useStore } from "vuex";
-import { reactive, computed, toRefs } from "vue"
+import { computed, ref } from "vue"
 
 export default {
   name: "UserList",
 
   setup() {
-    const data = reactive({
-      userAvatar
-    })
-
+    const userAvatar = ref(userAvatarImg)
     const store = useStore()
 
     // computed
@@ -56,7 +53,7 @@ export default {
       // data
       users,
       userCount,
-      ...toRefs(data),
+      userAvatar,
 
       // methods
       loadUsers,
